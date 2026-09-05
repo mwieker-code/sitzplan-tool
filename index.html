@@ -26,6 +26,44 @@
 <style>
 .tablecolor{width:34px;height:29px;padding:1px;border:1px solid #bcd0c9;border-radius:6px;background:#fff;cursor:pointer}.fontsizecontrol{display:grid;grid-template-columns:1fr auto;gap:6px 10px;align-items:center;margin-top:8px;padding:10px;border:1px solid var(--line);border-radius:9px;background:#fafbf9}.fontsizecontrol label{font-size:12px;font-weight:650}.fontsizecontrol output{min-width:34px;color:var(--green);font-size:11px;font-weight:750;text-align:right}.fontsizecontrol input{grid-column:1/-1;width:100%;accent-color:var(--green);cursor:pointer}.seat{font-size:var(--name-font-size,12px)}.studentlabel{gap:0}.roomsettings{display:grid;grid-template-columns:1fr;gap:5px;margin-top:8px}.roomsettings label{color:var(--muted);font-size:10px;font-weight:750;text-transform:uppercase;letter-spacing:.06em}.roomsettings select{width:100%;padding:8px 9px;border:1px solid var(--line);border-radius:9px;background:#fafbf9;color:var(--ink);font-size:12px}.room{aspect-ratio:var(--room-aspect,1.56 / 1)}.board{top:0;bottom:auto;height:3.6%;border-radius:8px;display:flex;align-items:center;justify-content:center;line-height:1;user-select:none;touch-action:none}.movetables .board{cursor:grab;box-shadow:0 0 0 2px #b8d4ca,0 3px 8px #0002}.studentlabel{transform:rotate(var(--name-counter-rotation,0deg))}.desk.rotated .studentlabel{transform:translate(-50%,-50%) rotate(var(--name-counter-rotation,-90deg))}.seat.namevertical{position:relative;overflow:visible}.seat.namevertical .studentlabel{position:absolute;z-index:3;left:50%;top:50%;width:max-content;min-width:92px;max-width:145px;min-height:26px;padding:5px 7px;transform:translate(-50%,-50%) rotate(var(--name-counter-rotation,90deg));border:1px solid #c8d5d0;border-radius:7px;background:#fffffff5;box-shadow:0 2px 8px rgba(29,48,42,.16);white-space:normal;line-height:1.15}.seat.namevertical .studentlabel>span:last-child{overflow:visible;text-overflow:clip;white-space:normal;overflow-wrap:anywhere;text-align:center}
 </style>
+<style id="interface-refresh">
+/* Shared offline interface and print layout. */
+body{background:#edf2ef}
+.topbar{position:static;height:auto;min-height:80px;padding:16px 24px;flex-wrap:wrap;gap:16px}
+.toolbar{flex-wrap:wrap;gap:6px}.toolbar .tool span{display:inline}
+.workspace{grid-template-columns:300px minmax(0,1fr);max-width:1700px;align-items:start;padding:20px;gap:20px;overflow:visible}
+.panel{min-height:0;padding:20px;gap:14px}.panel h2{font-size:23px}
+.panel .help{display:block;margin:0;font-size:12px;line-height:1.6;color:var(--muted)}
+.controlgroup{border-top:1px solid var(--line);padding-top:14px}
+.controlgroup summary{font-size:14px;font-weight:750;cursor:pointer;padding:4px 0 10px;color:var(--green)}
+.groupbody{display:grid;gap:8px}.groupbody>button{margin:0;text-align:left;padding:12px}
+.groupbody .roomsettings,.groupbody .fontsizecontrol,.groupbody .planfiles{margin:0}
+.groupbody .tray{max-height:240px;overflow:auto}.groupnote{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+.panel .reset{margin:0;font-size:11px;text-align:left}
+.roomcard{padding:0 18px 24px;overflow:visible;min-width:0}
+.roomhead{height:auto;min-height:64px;gap:10px;padding:14px 0;flex-wrap:wrap}.roomhead p{font-size:12px;max-width:100%}
+.roomviewport{overflow:auto;padding:20px; background:#eef1ed;border-radius:12px}
+.room{width:100%;min-width:650px;overflow:visible;border:1px solid #cbd6cf;background-color:#fafbf7}
+.seats:has(.namevertical){overflow:visible}.board{z-index:5}
+.namesdialog{max-height:90vh;overflow:auto}.namelist{grid-template-columns:1fr}.namerow{grid-template-columns:24px minmax(80px,1fr) 100px 30px}
+button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #6ba995;outline-offset:3px}
+.toggle input:focus-visible+.track,.snaptoggle input:focus-visible+.magnet{outline:3px solid #6ba995}
+#printSheet{display:none}
+@media(max-width:1100px){.workspace{grid-template-columns:270px minmax(0,1fr);padding:12px;gap:12px}.topbar{padding:14px}.toolbar{justify-content:flex-start}}
+@media(max-width:760px){.workspace{display:flex;flex-direction:column}.panel,.roomcard{width:100%}.panel{padding:16px}.toolbar{overflow:visible}.roomhead{width:auto}.roomcard{padding:0 12px 16px}.roomviewport{padding:12px}.room{width:650px}.controlgroup summary{padding-bottom:8px}}
+@media print{
+ @page{size:auto;margin:10mm}
+ html,body{margin:0!important;padding:0!important;background:white!important;min-height:0!important;height:auto!important;overflow:visible!important}
+ body>*{display:none!important}
+ body>#printSheet{display:block!important;position:relative!important;width:180mm!important;height:175mm!important;margin:0 auto!important;padding:0!important;overflow:visible!important;break-inside:avoid;page-break-inside:avoid;color:#20282c}
+ #printTitle{margin:0;font:700 16px/1.3 sans-serif;height:9mm;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ #printStage{position:relative;width:180mm;height:164mm}
+ #printStage>.room{position:absolute!important;margin:0!important;border:0!important;min-width:0!important;overflow:visible!important;transform-origin:0 0!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ #printSheet .rotate{display:none!important}#printSheet .board{box-shadow:none!important}
+ #printSheet .seat.selected{background:#ffffff2e!important;box-shadow:none!important}
+ #printSheet .grip{cursor:default!important}
+}
+</style>
 </head>
 <body>
 <header class="topbar"><div class="brand"><div class="mark">S</div><div><p class="eyebrow">Digitaler Sitzplan</p><input id="classname" class="classname" aria-label="Klassenname" placeholder="Klassenname"></div></div><div class="toolbar"><button id="undo" class="tool" title="Rückgängig">↶ <span>Rückgängig</span></button><button id="redo" class="tool" title="Wiederholen">↷</button><i class="divider"></i><label id="moveLabel" class="toggle" title="Verhindert versehentliches Verschieben"><input id="moveToggle" type="checkbox"><span class="track"><i></i></span>Tische sperren</label><label id="snapLabel" class="snaptoggle" title="Tische docken nur beim Loslassen an"><input id="snapToggle" type="checkbox"><span class="magnet">⌁</span>Andocken</label><button id="print" class="tool">⌁ <span>Drucken / PDF</span></button><button id="save" class="primary">Speichern</button></div></header>
@@ -97,7 +135,7 @@ function addTable(seatCount){const next=clone(plan),number=next.tables.filter(t=
 function removeTable(tableId){const table=plan.tables.find(t=>t.id===tableId);if(!table||table.kind)return;const occupied=table.seats.filter(Boolean).length,message=occupied?'Diesen Tisch entfernen? '+(occupied===1?'Der dort sitzende Schüler':'Die dort sitzenden Schüler')+' kommt in die Ablage.':'Diesen Tisch wirklich entfernen?';if(!confirm(message))return;const next=clone(plan);next.tables=next.tables.filter(t=>t.id!==tableId);commit(next);populateTableList()}
 function populateTableList(){const list=$('#tableList'),tables=plan.tables.filter(t=>!t.kind);list.innerHTML='';tables.forEach((table,i)=>{const row=document.createElement('div');row.innerHTML=`<span class="tablenumber">${i+1}</span><span><strong>Tisch ${i+1}</strong><small>${table.seats.length===1?'1 Sitzplatz':'2 Sitzplätze'} · ${table.seats.filter(Boolean).length} belegt</small></span><input class="tablecolor" data-table-color="${table.id}" type="color" value="${colorOf(table)}" title="Farbe für Tisch ${i+1}" aria-label="Farbe für Tisch ${i+1}"><button class="deleteperson" data-table-delete="${table.id}" title="Tisch ${i+1} entfernen" aria-label="Tisch ${i+1} entfernen">×</button>`;list.appendChild(row)});list.querySelectorAll('[data-table-color]').forEach(input=>input.onchange=()=>{const next=clone(plan),target=next.tables.find(t=>t.id===input.dataset.tableColor);if(target){target.color=input.value;commit(next);populateTableList()}});list.querySelectorAll('[data-table-delete]').forEach(button=>button.onclick=()=>removeTable(button.dataset.tableDelete))}
 function render(){syncRoom();const map=byId(),placed=seated(),free=plan.students.filter(s=>!placed.has(s.id));$('#classname').value=plan.className;$('#count').textContent=plan.students.length+' Schüler';$('#status').textContent=placed.size+' platziert · '+free.length+' in Ablage';$('#undo').disabled=!history.length;$('#redo').disabled=!future.length;$('#moveToggle').checked=!moving;$('#moveLabel').classList.toggle('active',!moving);$('#snapToggle').checked=snapping;$('#snapLabel').classList.toggle('active',snapping);$('#roomhint').textContent=moving?(snapping?'Verschieben · Andocken erfolgt beim Loslassen':'Tische und Tafel frei beweglich · Tische mit ↻ drehen'):'Tische sind gesperrt';room.classList.toggle('movetables',moving);room.querySelectorAll('.desk').forEach(e=>e.remove());
-plan.tables.forEach(t=>{const d=document.createElement('div');d.className='desk'+(t.kind?' teacher':'')+(t.rotation===90?' rotated':'');d.dataset.table=t.id;d.dataset.kind=t.kind||'student';d.style.cssText=`left:${t.x}%;top:${t.y}%;width:${t.w}%;--table-color:${colorOf(t)};transform:rotate(${t.rotation||0}deg)`;const g=document.createElement('div');g.className='grip';const gripText=document.createElement('span');gripText.textContent=t.kind?'LEHRERPULT':moving?'⠿':'';g.appendChild(gripText);const rotate=document.createElement('button');rotate.className='rotate';rotate.textContent='↻';rotate.title='Tisch um 90° drehen';rotate.setAttribute('aria-label','Tisch drehen');rotate.addEventListener('pointerdown',e=>e.stopPropagation());rotate.addEventListener('click',e=>{e.stopPropagation();rotateDesk(t.id)});g.appendChild(rotate);g.addEventListener('pointerdown',e=>startDesk(e,t,d));d.appendChild(g);if(!t.kind){const seats=document.createElement('div');seats.className='seats';t.seats.forEach((sid,i)=>{const s=sid&&map[sid],sr=s&&[0,90,180,270].includes(Number(s.rotation))?Number(s.rotation):0,b=document.createElement('button');b.className='seat'+(sid===selected?' selected':'')+(s&&[90,270].includes(sr)?' namevertical':'');b.dataset.table=t.id;b.dataset.seat=i;b.dataset.student=sid||'';b.draggable=!!s;b.title=s?s.name+' – ziehen, anklicken oder doppelklicken':'Freier Platz';b.innerHTML=s?`<span class="studentlabel" style="--name-counter-rotation:${sr-(t.rotation||0)}deg"><span>${esc(s.name)}</span></span>`:'';b.addEventListener('click',()=>{if(selected)moveStudent(selected,t.id,i);else if(sid){selected=sid;render()}});b.addEventListener('dblclick',e=>{e.preventDefault();if(sid)rename(sid)});b.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',sid));b.addEventListener('dragover',e=>e.preventDefault());b.addEventListener('drop',e=>{e.preventDefault();moveStudent(e.dataTransfer.getData('text/plain'),t.id,i)});seats.appendChild(b)});d.appendChild(seats)}room.appendChild(d)});
+plan.tables.forEach(t=>{const d=document.createElement('div');d.className='desk'+(t.kind?' teacher':'')+(t.rotation===90?' rotated':'');d.dataset.table=t.id;d.dataset.kind=t.kind||'student';d.style.cssText=`left:${t.x}%;top:${t.y}%;width:${t.w}%;--table-color:${colorOf(t)};transform:rotate(${t.rotation||0}deg)`;const g=document.createElement('div');g.className='grip';const gripText=document.createElement('span');gripText.textContent=t.kind?'LEHRERPULT':moving?'⠿':'';g.appendChild(gripText);const rotate=document.createElement('button');rotate.className='rotate';rotate.textContent='↻';rotate.title='Tisch um 90° drehen';rotate.setAttribute('aria-label','Tisch drehen');rotate.addEventListener('pointerdown',e=>e.stopPropagation());rotate.addEventListener('click',e=>{e.stopPropagation();rotateDesk(t.id)});g.appendChild(rotate);g.addEventListener('pointerdown',e=>startDesk(e,t,d));d.appendChild(g);if(!t.kind){const seats=document.createElement('div');seats.className='seats';t.seats.forEach((sid,i)=>{const s=sid&&map[sid],sr=s&&[0,90,180,270].includes(Number(s.rotation))?Number(s.rotation):0,b=document.createElement('button');b.className='seat'+(sid&&sid===selected?' selected':'')+(s&&[90,270].includes(sr)?' namevertical':'');b.dataset.table=t.id;b.dataset.seat=i;b.dataset.student=sid||'';b.draggable=!!s;b.title=s?s.name+' – ziehen, anklicken oder doppelklicken':'Freier Platz';b.innerHTML=s?`<span class="studentlabel" style="--name-counter-rotation:${sr-(t.rotation||0)}deg"><span>${esc(s.name)}</span></span>`:'';b.addEventListener('click',()=>{if(selected)moveStudent(selected,t.id,i);else if(sid){selected=sid;render()}});b.addEventListener('dblclick',e=>{e.preventDefault();if(sid)rename(sid)});b.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',sid));b.addEventListener('dragover',e=>e.preventDefault());b.addEventListener('drop',e=>{e.preventDefault();moveStudent(e.dataTransfer.getData('text/plain'),t.id,i)});seats.appendChild(b)});d.appendChild(seats)}room.appendChild(d)});
 $('#tray').innerHTML=`<div class="traytitle"><span>Ablage</span><b>${free.length}</b></div>`+(free.length?'':'<p class="emptytray">Alle haben einen Platz.</p>');free.forEach(s=>{const b=document.createElement('button');b.className='chip'+(selected===s.id?' selected':'');b.textContent=s.name;b.draggable=true;b.addEventListener('click',()=>{selected=selected===s.id?null:s.id;render()});b.addEventListener('dblclick',()=>rename(s.id));b.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',s.id));$('#tray').appendChild(b)});$('#toast').className=selected?'toast':'';$('#toast').innerHTML=selected?`${esc(map[selected].name)} ausgewählt · Zielplatz anklicken <button id="cancel">Abbrechen</button>`:'';if(selected)$('#cancel').onclick=()=>{selected=null;render()}}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function rotateDesk(id){const next=clone(plan),table=next.tables.find(t=>t.id===id);table.rotation=table.rotation===90?0:90;commit(next)}
@@ -143,6 +181,47 @@ $('#showGuide').onclick=()=>$('#guideDialog').showModal();
 $('#closeGuide').onclick=$('#finishGuide').onclick=()=>$('#guideDialog').close();
 $('#reset').onclick=()=>{if(confirm('Den Sitzplan wirklich auf die Vorlage zurücksetzen?'))commit(clone(initial))};
 syncNameFont();render();
+})();
+</script>
+<script id="interface-behavior">
+/* Keep the editing canvas independent from the paper size. No network access. */
+(()=>{
+ const $=s=>document.querySelector(s), room=$('#room'), panel=$('.panel');
+ function group(title,nodes){const section=document.createElement('details');section.className='controlgroup';section.open=true;const summary=document.createElement('summary');summary.textContent=title;const body=document.createElement('div');body.className='groupbody';nodes.filter(Boolean).forEach(n=>body.append(n));section.append(summary,body);panel.append(section);return body}
+ const nodes={tray:$('#tray'),add:$('#add'),import:$('#importNames'),edit:$('#editNames'),change:$('#changeClass'),font:$('.fontsizecontrol'),format:$('.roomsettings'),tables:$('#manageTables'),files:$('.planfiles'),guide:$('#showGuide'),reset:$('#reset')};
+ $('.help').textContent='Name anklicken, dann Zielplatz wählen. Oder direkt ziehen. Besetzte Plätze werden getauscht.';
+ group('1 · Klasse & Namen',[nodes.change,nodes.import,nodes.add,nodes.edit,nodes.tray]);
+ const layout=group('2 · Raum & Darstellung',[nodes.format,nodes.tables,nodes.font]);
+ const hint=document.createElement('p');hint.className='groupnote';hint.textContent='Raumformat und Papierformat sind unabhängig. Tische und Tafel anordnen; Namen unter „Namen bearbeiten“ einzeln drehen.';layout.append(hint);
+ const output=group('3 · Sichern & Ausgeben',[nodes.files]);
+ const printButton=$('#print');printButton.textContent='Drucken / Als PDF speichern';output.append(printButton);
+ const note=document.createElement('p');note.className='groupnote';note.textContent='Der gesamte Plan wird auf eine Seite verkleinert. A4 ist im Hoch- und Querformat möglich. Im Druckdialog 100 % oder „An Seite anpassen“ wählen, Kopf- und Fußzeilen ausschalten. Das Raumformat muss dafür nicht geändert werden.';output.append(note);
+ panel.append(nodes.guide,nodes.reset);
+ $('#moveLabel').lastChild.textContent='Raum sperren';$('#moveLabel').title='Tische und Tafel gegen Verschieben schützen';
+ const viewport=document.createElement('div');viewport.className='roomviewport';room.before(viewport);viewport.append(room);
+ const sheet=document.createElement('section');sheet.id='printSheet';sheet.setAttribute('aria-hidden','true');sheet.innerHTML='<h1 id="printTitle"></h1><div id="printStage"></div>';document.body.append(sheet);
+ let cached=null;
+ function capture(){
+   if(matchMedia('print').matches)return;
+   const base=room.getBoundingClientRect();if(!base.width||!base.height)return;
+   let left=base.left,top=base.top,right=base.right,bottom=base.bottom;
+   room.querySelectorAll('.desk,.board,.studentlabel').forEach(el=>{const r=el.getBoundingClientRect();left=Math.min(left,r.left);top=Math.min(top,r.top);right=Math.max(right,r.right);bottom=Math.max(bottom,r.bottom)});
+   cached={clone:room.cloneNode(true),width:base.width,height:base.height,left:base.left-left+12,top:base.top-top+12,totalWidth:right-left+24,totalHeight:bottom-top+24};
+ }
+ function prepare(){
+   capture();if(!cached)return;
+   const c=cached,copy=c.clone.cloneNode(true),stage=$('#printStage');
+   copy.removeAttribute('id');copy.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
+   copy.classList.remove('movetables');copy.querySelectorAll('.grip>span').forEach(el=>{if(!el.closest('.teacher'))el.textContent=''});
+   const scale=Math.min(180*96/25.4/c.totalWidth,164*96/25.4/c.totalHeight);
+   copy.style.setProperty('width',c.width+'px','important');copy.style.setProperty('height',c.height+'px','important');copy.style.setProperty('aspect-ratio','auto','important');
+   copy.style.left=((180*96/25.4-c.totalWidth*scale)/2+c.left*scale)+'px';copy.style.top=c.top*scale+'px';copy.style.transform='scale('+scale+')';
+   stage.replaceChildren(copy);$('#printTitle').textContent=$('#classname').value||'Sitzplan';
+ }
+ printButton.onclick=()=>{capture();prepare();window.print()};window.addEventListener('beforeprint',prepare);
+ const observer=new MutationObserver(()=>{capture()});observer.observe(room,{subtree:true,childList:true,attributes:true,characterData:true});
+ new ResizeObserver(()=>capture()).observe(room);window.addEventListener('resize',capture);capture();
+ const guide=$('#guideDialog');guide.querySelectorAll('p').forEach(p=>{if(p.textContent.includes('Querformat'))p.textContent=p.textContent.replace(/Vor dem Speichern als PDF.*?auswählen\./,'Die Druckansicht verkleinert den vollständigen Raum einschließlich Tafel, Lehrerpult und überstehender Elemente auf eine A4-Seite. Hoch- und Querformat sind möglich; 100 % oder „An Seite anpassen“ wählen und Kopf- und Fußzeilen ausschalten. Das Raumformat bleibt unverändert.');p.textContent=p.textContent.replaceAll('Tische sperren','Raum sperren')});
 })();
 </script>
 </body>
